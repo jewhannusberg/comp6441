@@ -8,7 +8,9 @@ It's been base64'd after being encrypted with repeating-key XOR
 import binascii
 import base64
 import numpy
-
+import xor_cipher # single character xor cipher decrypt
+import frequencies
+import rep_key_xor # decrypt repeating key xor
 
 MIN_KEYSIZE = 2 # initial guess of key length
 MAX_KEYSIZE = 40
@@ -27,26 +29,50 @@ def hamming_dist(actual, guess):
             if guess[i] != actual[i]:
                 dist += bin(guess[i] ^ actual[i]).count("1")
     return dist
-# def block_ciphertext(data, keylen):
+
+# break the ciphertext into blocks of KEYSIZE length.
+def block_ciphertext(data, k):
+    start = 0
+    return [data[i:i+k] for i in range(0, len(data), k)]
+
+def transpose(blocks, k):
+    transposed = []
+    for i in range(0, k):
+        transposed.append([block[i:i+1] for index, block in enumerate(blocks)])
+    return transposed
 
 def decrypt_repeated_key_xor(data):
-    def _decrypt(keylen):
-        key_dist = hamming_dist(data[0:keylen], data[keylen:2*keylen])
-        key_dist_norm = key_dist/keylen
-        return key_dist_norm
+    def _decrypt():
+        return None
+    distances = []
+    for keylen in range(MIN_KEYSIZE, MAX_KEYSIZE+1):
+        pair = block_ciphertext(data, keylen)[0:N]
+        dist = hamming_dist(pair[0], pair[1])
+        normalised_dist = dist/keylen
+        distances.append((keylen, normalised_dist))
+    # sort distances by hamming_dist
+    distances = sorted(distances, key=lambda dist: dist[1])
 
-    keylen = MIN_KEYSIZE
+    for dist in distances:
+        keylen = dist[0]
+        cipher_key = []
 
-    key_results = []
-    probable_keys = []    
-    for keylen in range(MIN_KEYSIZE, MAX_KEYSIZE):
-        result = _decrypt(keylen)
-        key_results.append(result)
-    key_results = numpy.asarray(key_results)
+        # transpose all the blocks
+        ciphertext_blocks = block_ciphertext(data, keylen)
+        transposed_blocks = transpose(ciphertext_blocks, keylen)
 
-    probable_keys = list(key_results.argsort()[:N]) # 2 smallest hamming dist indices
+        # break as if single character XOR to get each char of the key string
+        for block in transposed_blocks:
+            cipher_key.append(xor_cipher.decode_xor(reduce(lambda a,b: a+b, block))[1])
 
+        # show all the possible key strings for each keysize length, sorted lowest to highest hamming distances
+        max_key_score = 0
+        if len(''.join(cipher_key)) > 1 and frequencies.score(''.join(cipher_key)) > max_key_score:
+            max_key_score = frequencies.score(''.join(cipher_key))
+            key = ''.join(cipher_key)
 
+    print key
+    # rep_key_xor.encrypt(data, key)
 
 
 # read file data

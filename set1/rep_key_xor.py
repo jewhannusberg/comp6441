@@ -20,22 +20,23 @@ def strxor(a, b):     # xor two strings of different lengths
     else:
         return '%x' % (int(a,16)^int(b[:len(a)],16))
 
-text = "Burning 'em, if you ain't quick and nimble I go crazy when I hear a cymbal"
-print text
-key = "ICE"
+# text = "Burning 'em, if you ain't quick and nimble I go crazy when I hear a cymbal"
+# print text
+# key = "ICE"
 
 # convert every byte of text to hex component
-hex_text = binascii.hexlify(text)
+def encrypt(text, key):
+    hex_text = binascii.hexlify(text)
 
-len_text = len(hex_text)
-len_key = len(key)
-try:
-    repetitions = len_text/len_key
-except:
-    print "not even number of repetitions, need to chop word"
+    len_text = len(hex_text)
+    len_key = len(key)
+    try:
+        repetitions = len_text/len_key
+    except:
+        print "not even number of repetitions, need to chop word"
 
-tot_key = key * repetitions
-hex_key = binascii.hexlify(tot_key)
+    tot_key = key * repetitions
+    hex_key = binascii.hexlify(tot_key)
 
-xor_text = strxor(hex_text, hex_key)
-print xor_text
+    xor_text = strxor(hex_text, hex_key)
+    print xor_text

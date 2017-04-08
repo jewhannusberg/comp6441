@@ -13,9 +13,7 @@ def _score(s):
     return float(len(letters)) / len(s)
 
 
-def decode_xor(hex_str):
-    encoded = binascii.unhexlify(hex_str)
-
+def decode_xor(encoded):
     res = []
     # loop through number of hex characters
     for xor_key in range(256):
@@ -27,6 +25,6 @@ def decode_xor(hex_str):
     # pick only first value of result list
     return max(res, key=lambda x: x[0])
 
-# xord_str = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
-
-# output = decode_xor(xord_str)
+xord_str = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
+encoded = binascii.unhexlify(xord_str)
+output = decode_xor(encoded)
