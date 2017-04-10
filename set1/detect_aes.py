@@ -12,8 +12,10 @@ def is_AES_ECB(ciphertext, block_size):
             if ciphertext[i*block_size:(i+1)*block_size] == ciphertext[j*block_size:(j+1)*block_size]:
                 return True
     return False
+
 fname = 'aes_detection.txt'
 for line in open(fname, 'r'):
     line = line.strip()
     line = binascii.a2b_hex(line)
-    print is_AES_ECB(line, 16)
+    if is_AES_ECB(line, 16):
+        print binascii.b2a_hex(line)
