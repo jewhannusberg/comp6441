@@ -23,4 +23,5 @@ def decrypt(n, ciphertext):
 
 ciphertext = "iodj{EuxwhIrufhLvEhvwIrufh}"
 
+# loop through 1-26 here to try a whole bunch of keys instead of doing it manually
 print decrypt(3, ciphertext)
