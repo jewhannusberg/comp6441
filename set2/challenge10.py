@@ -35,6 +35,7 @@ def AES_ECB_decrypt(ciphertext, key):
 
 def AES_CBC_encrypt(key, plaintext, iv):
     encoded = ""
+    left = ""
     for i in range(0, len(plaintext), 16): # iterate blocks of 16
         right = plaintext[i:i+16]
         left = AES_ECB_encrypt(xor_str(left, right), key)
@@ -50,7 +51,7 @@ def AES_CBC_decrypt(ciphertext, key, iv):
     return decoded
 
 
-with open('data10.txt', 'r') as encoded_text:
-    data = encoded_text.read().decode('base64')
+# with open('data10.txt', 'r') as encoded_text:
+    # data = encoded_text.read().decode('base64')
 
-print AES_CBC_decrypt(data, "YELLOW SUBMARINE", '\x00' * 16)
+# print AES_CBC_decrypt(data, "YELLOW SUBMARINE", '\x00' * 16)

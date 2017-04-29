@@ -25,5 +25,5 @@ class PKCS7Padder():
         pad = chr(amount_to_pad)
         return text + pad * amount_to_pad
 
-padder = PKCS7Padder(block_size=20)
-print repr(padder.pad("YELLOW SUBMARINE"))
+# padder = PKCS7Padder(block_size=20)
+# print repr(padder.pad("YELLOW SUBMARINE"))
